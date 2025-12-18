@@ -1,0 +1,82 @@
+@page "/average"
+
+<h3>Average Calculator</h3>
+
+<input type="number" step="any" @bind="Number1" placeholder="Number 1" /><br />
+<input type="number" step="any" @bind="Number2" placeholder="Number 2" /><br />
+<input type="number" step="any" @bind="Number3" placeholder="Number 3" /><br />
+<input type="number" step="any" @bind="Number4" placeholder="Number 4" /><br />
+<input type="number" step="any" @bind="Number5" placeholder="Number 5" /><br />
+
+<br />
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <p style="color:red">@ErrorMessage</p>
+}
+
+<button @onclick="CalculateAverage">Calculate Average</button>
+<button @onclick="CalculateClosest">Closest to Average</button>
+
+<br /><br />
+
+@if (AverageCalculated)
+{
+    <p><strong>Average:</strong> @AverageValue</p>
+}
+
+@if (ClosestCalculated)
+{
+    <p><strong>Closest Number:</strong> @Closest</p>
+}
+
+@code {
+    // All component-level fields
+    private double? Number1;
+    private double? Number2;
+    private double? Number3;
+    private double? Number4;
+    private double? Number5;
+
+    private double AverageValue;
+    private double Closest;
+
+    private bool AverageCalculated = false;
+    private bool ClosestCalculated = false;
+
+    private string? ErrorMessage;
+
+    // Methods
+    private void CalculateAverage()
+    {
+        ErrorMessage = null;
+
+        if (Number1 == null || Number2 == null || Number3 == null || Number4 == null || Number5 == null)
+        {
+            ErrorMessage = "Please enter all five numbers.";
+            return;
+        }
+
+        AverageValue = (Number1.Value + Number2.Value + Number3.Value + Number4.Value + Number5.Value) / 5;
+        AverageCalculated = true;
+        ClosestCalculated = false;
+    }
+
+    private void CalculateClosest()
+    {
+        ErrorMessage = null;
+
+        if (Number1 == null || Number2 == null || Number3 == null || Number4 == null || Number5 == null)
+        {
+            ErrorMessage = "Please enter all five numbers.";
+            return;
+        }
+
+        double[] nums = { Number1.Value, Number2.Value, Number3.Value, Number4.Value, Number5.Value };
+
+        AverageValue = nums.Average();
+        Closest = nums.OrderBy(n => Math.Abs(n - AverageValue)).First();
+
+        ClosestCalculated = true;
+    }
+}

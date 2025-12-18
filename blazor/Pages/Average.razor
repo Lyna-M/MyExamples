@@ -1,0 +1,53 @@
+@page "/average" 
+<h1>Average Calculator</h1>
+
+<div>
+    <input type="number" @bind="number1" placeholder="Number 1"/>
+    <input type="number" @bind="number2" placeholder="Number 2"/>
+    <input type="number" @bind="number3" placeholder="Number 3"/>
+    <input type="number" @bind="number4" placeholder="Number 4"/>
+    <input type="number" @bind="number5" placeholder="Number 5"/>
+
+    <button @onclick="CalculateAverage">Calculate Average</button>
+    <button @onclick="CalculateClosestToAverage">Find Closest to Average</button>
+</div>
+
+@if (averageCalculated)
+{
+    <p><strong>Average:</strong> @average</p>
+}
+@if (closestCalculated)
+{
+    <p><strong>Closest Number to Average:</strong> @closestNumber</p>
+}
+@code {
+    private double number1;
+    private double number2;
+    private double number3;
+    private double number4;
+    private double number5;
+
+    private double average;
+    private double closestNumber;
+    private bool averageCalculated = false;
+    private bool closestCalculated = false;
+
+    private void CalculateAverage()
+    {
+        average = (number1 + number2 + number3 + number4 + number5) / 5;
+        averageCalculated = true;
+        closestCalculated = false; // Reset closest calculation
+    }
+
+    private void CalculateClosestToAverage()
+    {
+        if (!averageCalculated)
+        {
+            CalculateAverage();
+        }
+
+        double[] numbers = { number1, number2, number3, number4, number5 };
+        closestNumber = numbers.OrderBy(n => Math.Abs(n - average)).First();
+        closestCalculated = true;
+    }
+}
